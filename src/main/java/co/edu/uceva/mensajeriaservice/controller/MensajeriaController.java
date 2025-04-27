@@ -10,31 +10,33 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/mensajes")
+@RequestMapping("/api/v1/mensajeria-service")
 @RequiredArgsConstructor
 @Tag(name = "Controlador de mensajes", description = "API para la gestión de los mensajes")
 public class MensajeriaController {
 
     private final MensajeriaService mensajeriaService;
 
-    @PostMapping
+    //Método para crear mensajes
+    @PostMapping("/mensajerias")
     public ResponseEntity<MensajeriaResponse> crearMensaje(
             @Valid @RequestBody MensajeriaRequest mensajeriaRequest) {
         MensajeriaResponse response = mensajeriaService.crearMensaje(mensajeriaRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping
+    //Método para listar mensajes
+    @GetMapping("/mensajerias")
     public ResponseEntity<List<MensajeriaResponse>> listarTodosLosMensajes() {
         List<MensajeriaResponse> mensajes = mensajeriaService.listarMensajes();
         return ResponseEntity.ok(mensajes);
     }
 
-    @GetMapping("/{id}")
+    //Método para buscar mensajes por id
+    @GetMapping("/mensajeria/{id}")
     public ResponseEntity<MensajeriaResponse> obtenerMensajePorId(
             @Parameter(description = "ID del mensaje a buscar")
             @PathVariable Long id) {
@@ -42,7 +44,8 @@ public class MensajeriaController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{id}")
+    //Método para modificar y actualizar mensajes
+    @PutMapping("/mensajerias/{id}")
     public ResponseEntity<MensajeriaResponse> actualizarMensaje(
             @Parameter(description = "ID del mensaje a actualizar")
             @PathVariable Long id,
@@ -51,7 +54,8 @@ public class MensajeriaController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}")
+    //Método para eliminar mensajes
+    @DeleteMapping("/mensajerias/{id}")
     public ResponseEntity<Void> eliminarMensaje(
             @Parameter(description = "ID del mensaje a eliminar")
             @PathVariable Long id) {
