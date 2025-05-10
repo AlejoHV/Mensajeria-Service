@@ -1,1 +1,1 @@
-Conexión con Slack
+Conexión del microservicio con Slack
