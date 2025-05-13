@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_DB=cursosdb'
+      - 'POSTGRES_PASSWORD=1234'
+      - 'POSTGRES_USER=postgres'
+    healthcheck:
+      test: [ "CMD-SHELL","pg_isready -U postgres -d cursosdb" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - '5432'
+    networks:
+      - red-backend-app
+
+  mensajeria-service:
+    image: alejohernandez/mensajeria-service:latest
+    container_name: mensajeria-service
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/cursosdb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=1234
+      - JPA_DDL=create-drop
+    profiles:
+      - app
+    networks:
+      - red-backend-app
+
+networks:
+  red-backend-app:
+    driver: bridge
